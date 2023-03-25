@@ -94,8 +94,6 @@ Navigation::tick()
   if (vel_msgs.linear.x > 0.01 || vel_msgs.linear.x < -0.01) {
     return BT::NodeStatus::RUNNING;
   } else {
-    debug_msg_.data = DebugNode::PERSON_FOUND;
-    debug_pub_->publish(debug_msg_);
     return BT::NodeStatus::SUCCESS;
   }
 }

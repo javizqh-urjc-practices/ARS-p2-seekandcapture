@@ -12,6 +12,7 @@
                         <Action ID="FindPerson"/>
                     </ReactiveFallback>
                     <Action ID="Navigate" person_frame=""/>
+                    <Action ID="Turn"/>
                 </Sequence>
             </ReactiveSequence>
         </KeepRunningUntilFailure>
@@ -29,6 +30,7 @@
         <Action ID="Navigate">
             <input_port name="person_frame"/>
         </Action>
+        <Action ID="Turn"/>
     </TreeNodesModel>
     <!-- ////////// -->
 </root>

@@ -49,6 +49,8 @@ add_library(seek_and_capture_find_person_bt_node SHARED src/seek_and_capture_for
 src/seek_and_capture_forocoches/DebugNode.cpp)
 add_library(seek_and_capture_is_person_bt_node SHARED src/seek_and_capture_forocoches/IsPerson.cpp
 src/seek_and_capture_forocoches/DebugNode.cpp)
+add_library(seek_and_capture_turn_bt_node SHARED src/seek_and_capture_forocoches/Turn.cpp
+src/seek_and_capture_forocoches/DebugNode.cpp)
 
 list(APPEND plugin_libs
   seek_and_capture_navigation_bt_node
@@ -56,6 +58,7 @@ list(APPEND plugin_libs
   seek_and_capture_is_on_ground_bt_node
   seek_and_capture_find_person_bt_node
   seek_and_capture_is_person_bt_node
+  seek_and_capture_turn_bt_node
 )
 
 foreach(bt_plugin ${plugin_libs})

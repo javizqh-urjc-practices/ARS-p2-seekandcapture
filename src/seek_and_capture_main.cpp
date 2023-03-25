@@ -39,6 +39,7 @@ int main(int argc, char * argv[])
   factory.registerFromPlugin(loader.getOSName("seek_and_capture_is_on_ground_bt_node"));
   factory.registerFromPlugin(loader.getOSName("seek_and_capture_find_person_bt_node"));
   factory.registerFromPlugin(loader.getOSName("seek_and_capture_is_person_bt_node"));
+  factory.registerFromPlugin(loader.getOSName("seek_and_capture_turn_bt_node"));
 
   std::string pkgpath = ament_index_cpp::get_package_share_directory("seek_and_capture_forocoches");
   std::string xml_file = pkgpath + "/behavior_tree_xml/seek_and_capture.xml";
