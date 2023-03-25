@@ -47,27 +47,40 @@ def generate_launch_description():
             ('input_detection_2d', '/detection_2d_array')
             ])
 
+    # Node for debug info
+    debug_cmd = Node(
+        package='debug_forocoches',
+        executable='debug_interface',
+        output='screen',
+        parameters=[{'use_sim_time': True}],
+        arguments=['--ros-args', '--log-level', 'debug'],
+        remappings=[
+            ('output_led_1', '/commands/led1'),
+            ('output_led_2', '/commands/led2'),
+            ('output_sound', '/commands/sound')
+        ]
+    )
+
     # Node for seek_and_capture_cmd
     seek_and_capture_cmd = Node(
         package='seek_and_capture_forocoches',
         executable='sac_forocoches',
         output='screen',
         parameters=[{'use_sim_time': True}],
-        arguments=['--ros-args', '--log-level', 'debug'],
+        arguments=['--ros-args', '--log-level', 'info'],
         remappings=[
             ('output_vel', '/cmd_vel'),
             ('output_detection_3d', '/output_detection_3d'),
             ('input_wheel_drop', '/events/wheel_drop'),
-            ('output_led_1', '/commands/led1'),
-            ('output_led_2', '/commands/led2'),
-            ('output_sound', '/commands/sound'),
             ('input_battery_state', '/sensors/battery_state')
         ]
     )
+
     ld = LaunchDescription()
     ld.add_action(darknet_launch_cmd)
     ld.add_action(darknet_detection_asr)
     ld.add_action(depth_detection_asr)
+    ld.add_action(debug_cmd)
     ld.add_action(seek_and_capture_cmd)
 
     return ld

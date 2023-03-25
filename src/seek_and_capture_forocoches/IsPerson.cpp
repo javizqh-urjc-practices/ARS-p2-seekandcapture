@@ -91,7 +91,7 @@ IsPerson::tick()
   if (last_detection_ == nullptr) {
     debug_msg_.data = DebugNode::ERROR;
     debug_pub_->publish(debug_msg_);
-    return BT::NodeStatus::RUNNING;
+    return BT::NodeStatus::FAILURE;
   }
 
   for (auto detection : last_detection_->detections) {
