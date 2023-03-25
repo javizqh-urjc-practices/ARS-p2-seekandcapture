@@ -15,6 +15,8 @@
 #ifndef SEEK_AND_CAPTURE_FOROCOCHES__TURN_HPP_
 #define SEEK_AND_CAPTURE_FOROCOCHES__TURN_HPP_
 
+#include <string>
+
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
 
