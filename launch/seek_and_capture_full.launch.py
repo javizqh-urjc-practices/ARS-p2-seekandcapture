@@ -47,13 +47,13 @@ def generate_launch_description():
             ('input_detection_2d', '/detection_2d_array')
             ])
 
-    # Node for tag
+    # Node for seek_and_capture_cmd
     seek_and_capture_cmd = Node(
         package='seek_and_capture_forocoches',
         executable='sac_forocoches',
         output='screen',
         parameters=[{'use_sim_time': True}],
-        arguments=['--ros-args', '--log-level', 'info'],
+        arguments=['--ros-args', '--log-level', 'debug'],
         remappings=[
             ('output_vel', '/cmd_vel'),
             ('output_detection_3d', '/output_detection_3d'),
@@ -61,7 +61,7 @@ def generate_launch_description():
             ('output_led_1', '/commands/led1'),
             ('output_led_2', '/commands/led2'),
             ('output_sound', '/commands/sound'),
-            ("input_battery_state", "/sensors/battery_state")
+            ('input_battery_state', '/sensors/battery_state')
         ]
     )
     ld = LaunchDescription()
