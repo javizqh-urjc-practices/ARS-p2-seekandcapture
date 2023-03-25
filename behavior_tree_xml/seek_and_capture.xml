@@ -2,17 +2,19 @@
 <root main_tree_to_execute="BehaviorTree">
     <!-- ////////// -->
     <BehaviorTree ID="BehaviorTree">
-        <ReactiveSequence>
-            <Condition ID="LowBattery" battery_threshold="10.0"/>
-            <Condition ID="Is_on_ground"/>
-            <Sequence>
-                <ReactiveFallback name="Finding person">
-                    <Condition ID="IsPerson" person_frame=""/>
-                    <Action ID="FindPerson"/>
-                </ReactiveFallback>
-                <Action ID="Navigate" person_frame=""/>
-            </Sequence>
-        </ReactiveSequence>
+        <KeepRunningUntilFailure>
+            <ReactiveSequence>
+                <Condition ID="LowBattery" battery_threshold="10.0"/>
+                <Condition ID="Is_on_ground"/>
+                <Sequence>
+                    <ReactiveFallback name="Finding person">
+                        <Condition ID="IsPerson" person_frame=""/>
+                        <Action ID="FindPerson"/>
+                    </ReactiveFallback>
+                    <Action ID="Navigate" person_frame=""/>
+                </Sequence>
+            </ReactiveSequence>
+        </KeepRunningUntilFailure>
     </BehaviorTree>
     <!-- ////////// -->
     <TreeNodesModel>

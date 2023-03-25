@@ -54,6 +54,8 @@ public:
       });
   }
 
+  bool tf_already_exists_in_position(tf2::Transform robot2newPerson, int persons_detected);
+
 private:
   rclcpp::Node::SharedPtr node_;
   rclcpp::Time start_time_;

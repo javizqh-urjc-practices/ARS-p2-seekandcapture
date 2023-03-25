@@ -48,6 +48,38 @@ IsPerson::halt()
 {
 }
 
+bool IsPerson::tf_already_exists_in_position(tf2::Transform robot2newPerson, int persons_detected)
+{
+  for (int i = 0; i < persons_detected; i++) {
+    // Get the tf from the person already found to the robot
+    geometry_msgs::msg::TransformStamped oldPerson2robot_msg;
+    tf2::Stamped<tf2::Transform> oldPerson2robot;
+    try {
+      oldPerson2robot_msg = tf_buffer_.lookupTransform(
+        "person_detected" + std::to_string(i),
+        "base_link", tf2::timeFromSec(rclcpp::Time(last_detection_->header.stamp).seconds() - 0.3));
+      tf2::fromMsg(oldPerson2robot_msg, oldPerson2robot);
+    } catch (tf2::TransformException & ex) {
+      RCLCPP_WARN(node_->get_logger(), "Person transform not found: %s", ex.what());
+      return true;
+    }
+
+    tf2::Transform oldPerson2newPerson = oldPerson2robot * robot2newPerson;
+    geometry_msgs::msg::TransformStamped oldPerson2newPerson_msg;
+    oldPerson2newPerson_msg.transform = tf2::toMsg(oldPerson2newPerson);
+
+    if (oldPerson2newPerson_msg.transform.translation.x < 0.5 &&
+      oldPerson2newPerson_msg.transform.translation.x > -0.5 &&
+      oldPerson2newPerson_msg.transform.translation.y < 0.5 &&
+      oldPerson2newPerson_msg.transform.translation.y > -0.5)
+    {
+      // Not near the other person
+      return true;
+    }
+  }
+  return false;
+}
+
 BT::NodeStatus
 IsPerson::tick()
 {
@@ -66,38 +98,41 @@ IsPerson::tick()
       tf2::Transform robot2person;
       robot2person.setOrigin(
         tf2::Vector3(
-          detection.bbox.center.position.z *
-          cos(detection.bbox.center.position.x),
-          -detection.bbox.center.position.z * sin(detection.bbox.center.position.x), 0.0));
+          detection.bbox.center.position.z,
+          -detection.bbox.center.position.x, 0.0));
       robot2person.setRotation(tf2::Quaternion(0.0, 0.0, 0.0, 1.0));
       // -------
-      // Tf from odom to robot
-      geometry_msgs::msg::TransformStamped odom2robot_msg;
-      tf2::Stamped<tf2::Transform> odom2robot;
-      std::cout << detection.header.stamp.sec << std::endl;
-      try {
-        odom2robot_msg = tf_buffer_.lookupTransform(
-          "odom", "base_link",
-          tf2::timeFromSec(rclcpp::Time(last_detection_->header.stamp).seconds() - 0.3));
-        tf2::fromMsg(odom2robot_msg, odom2robot);
-      } catch (tf2::TransformException & ex) {
-        RCLCPP_WARN(node_->get_logger(), "Obstacle transform not found: %s", ex.what());
-        return BT::NodeStatus::RUNNING;
+      // Check if person is already published and found
+      if (!tf_already_exists_in_position(robot2person, person_detected)) {
+        // Tf from odom to robot
+        geometry_msgs::msg::TransformStamped odom2robot_msg;
+        tf2::Stamped<tf2::Transform> odom2robot;
+        try {
+          odom2robot_msg = tf_buffer_.lookupTransform(
+            "odom", "base_link",
+            tf2::timeFromSec(rclcpp::Time(last_detection_->header.stamp).seconds() - 0.3));
+          tf2::fromMsg(odom2robot_msg, odom2robot);
+        } catch (tf2::TransformException & ex) {
+          RCLCPP_WARN(node_->get_logger(), "Robot transform not found: %s", ex.what());
+          return BT::NodeStatus::RUNNING;
+        }
+        // --------------------
+        // Final tf to publish
+        tf2::Transform odom2person = odom2robot * robot2person;
+        geometry_msgs::msg::TransformStamped odom2person_msg;
+        odom2person_msg.transform = tf2::toMsg(odom2person);
+
+        odom2person_msg.header = detection.header;
+        odom2person_msg.header.frame_id = "odom";
+        odom2person_msg.child_frame_id = "person_detected" + std::to_string(person_detected);
+
+        config().blackboard->set(
+          "person_frame",
+          "person_detected" + std::to_string(person_detected));
+        person_detected++;
+        tf_broadcaster_->sendTransform(odom2person_msg);
+        return BT::NodeStatus::SUCCESS;
       }
-      // --------------------
-      // Final tf to publish
-      tf2::Transform odom2person = odom2robot * robot2person;
-      geometry_msgs::msg::TransformStamped odom2person_msg;
-      odom2person_msg.transform = tf2::toMsg(odom2person);
-
-      odom2person_msg.header = detection.header;
-      odom2person_msg.header.frame_id = "odom";
-      odom2person_msg.child_frame_id = "person_detected" + std::to_string(person_detected);
-
-      config().blackboard->set("person_frame", "person_detected" + std::to_string(person_detected));
-      person_detected++;
-      tf_broadcaster_->sendTransform(odom2person_msg);
-      return BT::NodeStatus::SUCCESS;
     }
   }
 

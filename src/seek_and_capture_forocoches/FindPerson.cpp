@@ -43,7 +43,7 @@ FindPerson::tick()
   }
 
   geometry_msgs::msg::Twist vel_msgs;
-  vel_msgs.angular.z = 0.3;
+  vel_msgs.angular.z = 0.15;
   vel_pub_->publish(vel_msgs);
 
   return BT::NodeStatus::RUNNING;
