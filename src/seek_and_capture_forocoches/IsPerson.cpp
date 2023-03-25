@@ -30,8 +30,9 @@ IsPerson::IsPerson(
   config().blackboard->get("node", node_);
   person_detected = 0;
 
+  debug_pub_ = node_->create_publisher<DebugNode::DebugMessage>(DebugNode::TOPIC_NAME, 10);
   detection_sub_ = node_->create_subscription<vision_msgs::msg::Detection3DArray>(
-    "/output_detection_3d", rclcpp::SensorDataQoS(),
+    "output_detection_3d", rclcpp::SensorDataQoS(),
     std::bind(&IsPerson::detection_callback, this, _1));
 
   // Building tf broadcaster
@@ -88,8 +89,9 @@ IsPerson::tick()
   }
 
   if (last_detection_ == nullptr) {
-    // TODO(javier): Add debug support
-    return BT::NodeStatus::FAILURE;
+    debug_msg_.data = DebugNode::ERROR;
+    debug_pub_->publish(debug_msg_);
+    return BT::NodeStatus::RUNNING;
   }
 
   for (auto detection : last_detection_->detections) {
@@ -113,8 +115,9 @@ IsPerson::tick()
             tf2::timeFromSec(rclcpp::Time(last_detection_->header.stamp).seconds() - 0.3));
           tf2::fromMsg(odom2robot_msg, odom2robot);
         } catch (tf2::TransformException & ex) {
-          RCLCPP_WARN(node_->get_logger(), "Robot transform not found: %s", ex.what());
-          return BT::NodeStatus::RUNNING;
+          debug_msg_.data = DebugNode::ERROR;
+          debug_pub_->publish(debug_msg_);
+          return BT::NodeStatus::FAILURE;
         }
         // --------------------
         // Final tf to publish
@@ -131,6 +134,8 @@ IsPerson::tick()
           "person_detected" + std::to_string(person_detected));
         person_detected++;
         tf_broadcaster_->sendTransform(odom2person_msg);
+        debug_msg_.data = DebugNode::PERSON_DETECTED;
+        debug_pub_->publish(debug_msg_);
         return BT::NodeStatus::SUCCESS;
       }
     }

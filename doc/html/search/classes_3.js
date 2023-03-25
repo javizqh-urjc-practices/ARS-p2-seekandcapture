@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['navigation_10',['Navigation',['../classseek__and__capture__forocoches_1_1Navigation.html',1,'seek_and_capture_forocoches']]]
+  ['lowbattery_13',['LowBattery',['../classseek__and__capture__forocoches_1_1LowBattery.html',1,'seek_and_capture_forocoches']]]
 ];

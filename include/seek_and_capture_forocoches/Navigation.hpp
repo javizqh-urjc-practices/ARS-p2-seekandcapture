@@ -28,6 +28,7 @@
 #include "rclcpp/rclcpp.hpp"
 
 #include "seek_and_capture_forocoches/PIDController.hpp"
+#include "seek_and_capture_forocoches/DebugNode.hpp"
 
 namespace seek_and_capture_forocoches
 {
@@ -55,6 +56,8 @@ private:
   rclcpp::Node::SharedPtr node_;
   rclcpp::Time start_time_;
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub_;
+  DebugNode::DebugPublisher debug_pub_;
+  DebugNode::DebugMessage debug_msg_;
   PIDController * pid_lin_;
   PIDController * pid_ang_;
   tf2::BufferCore tf_buffer_;

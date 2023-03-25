@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['findperson_0',['FindPerson',['../classseek__and__capture__forocoches_1_1FindPerson.html',1,'seek_and_capture_forocoches']]]
+  ['debugnode_0',['DebugNode',['../classDebugNode.html',1,'']]],
+  ['debugnode_2ecpp_1',['DebugNode.cpp',['../DebugNode_8cpp.html',1,'']]],
+  ['debugnode_2ehpp_2',['DebugNode.hpp',['../DebugNode_8hpp.html',1,'']]]
 ];

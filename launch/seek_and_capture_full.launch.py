@@ -53,7 +53,16 @@ def generate_launch_description():
         executable='sac_forocoches',
         output='screen',
         parameters=[{'use_sim_time': True}],
-        arguments=['--ros-args', '--log-level', 'info']
+        arguments=['--ros-args', '--log-level', 'info'],
+        remappings=[
+            ('output_vel', '/cmd_vel'),
+            ('output_detection_3d', '/output_detection_3d'),
+            ('input_wheel_drop', '/events/wheel_drop'),
+            ('output_led_1', '/commands/led1'),
+            ('output_led_2', '/commands/led2'),
+            ('output_sound', '/commands/sound'),
+            ("input_battery_state", "/sensors/battery_state")
+        ]
     )
     ld = LaunchDescription()
     ld.add_action(darknet_launch_cmd)

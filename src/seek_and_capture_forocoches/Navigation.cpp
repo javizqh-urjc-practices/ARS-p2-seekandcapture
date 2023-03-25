@@ -36,7 +36,8 @@ Navigation::Navigation(
 {
   config().blackboard->get("node", node_);
 
-  vel_pub_ = node_->create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 100);
+  debug_pub_ = node_->create_publisher<DebugNode::DebugMessage>(DebugNode::TOPIC_NAME, 10);
+  vel_pub_ = node_->create_publisher<geometry_msgs::msg::Twist>("output_vel", 100);
   pid_lin_ = new PIDController(0.0, 5.0, 0.0, 0.5);
   pid_ang_ = new PIDController(0.0, M_PI / 2, 0.0, 0.5);
 }
@@ -53,37 +54,48 @@ Navigation::tick()
     start_time_ = node_->now();
   }
 
+  // Obtain person frame
   config().blackboard->get("person_frame", person_frame_);
-  // Obtain frame
   geometry_msgs::msg::TransformStamped robot2person;
 
   try {
     robot2person = tf_buffer_.lookupTransform(
       "base_link", person_frame_, tf2::TimePointZero);
   } catch (tf2::TransformException & ex) {
-    std::cout << "Frame not found" << std::endl;
-    return BT::NodeStatus::RUNNING;
+    RCLCPP_ERROR(node_->get_logger(), "Person transform not found: %s", ex.what());
+    debug_msg_.data = DebugNode::ERROR;
+    debug_pub_->publish(debug_msg_);
+    return BT::NodeStatus::FAILURE;
   }
 
+  // Get distance
   double x = robot2person.transform.translation.x;
   double y = robot2person.transform.translation.y;
-  // std::cout << x << std::endl;
-  // std::cout << y << std::endl;
   double length = sqrt(x * x + y * y);
   double theta = atan2(y, x);
-  // std::cout << length << std::endl;
-  // std::cout << theta << std::endl;
-  //----------
+
+  // Send velocity
   geometry_msgs::msg::Twist vel_msgs;
   vel_msgs.linear.x = std::clamp(pid_lin_->get_output(length - 1.0), -0.5, 0.5);
   vel_msgs.angular.z = std::clamp(pid_ang_->get_output(theta), -0.5, 0.5);
+
+  if (vel_msgs.linear.x > 0.3) {
+    debug_msg_.data = DebugNode::MOVING_MODERATE;
+  } else if (vel_msgs.linear.x > 0.15) {
+    debug_msg_.data = DebugNode::MOVING_SLOW;
+  } else {
+    debug_msg_.data = DebugNode::MOVING_REALLY_SLOW;
+  }
+  debug_pub_->publish(debug_msg_);
   vel_pub_->publish(vel_msgs);
-  // std::cout << vel_msgs.linear.x << std::endl;
+
 
   auto elapsed = node_->now() - start_time_;
-  if (length >= 1.0) {
+  if (vel_msgs.linear.x > 0.01 || vel_msgs.linear.x < -0.01) {
     return BT::NodeStatus::RUNNING;
   } else {
+    debug_msg_.data = DebugNode::PERSON_FOUND;
+    debug_pub_->publish(debug_msg_);
     return BT::NodeStatus::SUCCESS;
   }
 }

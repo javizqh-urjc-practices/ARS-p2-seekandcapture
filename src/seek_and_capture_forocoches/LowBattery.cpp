@@ -35,8 +35,10 @@ LowBattery::LowBattery(
 {
   config().blackboard->get("node", node_);
 
+  debug_pub_ = node_->create_publisher<DebugNode::DebugMessage>(DebugNode::TOPIC_NAME, 10);
+
   battery_sub_ = node_->create_subscription<sensor_msgs::msg::BatteryState>(
-    "/sensors/battery_state", 100, std::bind(&LowBattery::battery_callback, this, _1));
+    "input_battery_state", 100, std::bind(&LowBattery::battery_callback, this, _1));
 
   last_reading_time_ = node_->now();
 }
@@ -52,7 +54,9 @@ LowBattery::tick()
 {
   return BT::NodeStatus::SUCCESS;
   if (last_battery_state_ == nullptr) {
-    return BT::NodeStatus::FAILURE;
+    debug_msg_.data = DebugNode::ERROR;
+    debug_pub_->publish(debug_msg_);
+    return BT::NodeStatus::RUNNING;
   }
 
   double battery_threshold = 10.0;
@@ -61,6 +65,8 @@ LowBattery::tick()
   if (last_battery_state_->percentage > battery_threshold) {
     return BT::NodeStatus::SUCCESS;
   } else {
+    debug_msg_.data = DebugNode::LOW_BATTERY;
+    debug_pub_->publish(debug_msg_);
     return BT::NodeStatus::FAILURE;
   }
 }

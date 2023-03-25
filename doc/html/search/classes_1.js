@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['is_5fon_5fground_7',['Is_on_ground',['../classseek__and__capture__forocoches_1_1Is__on__ground.html',1,'seek_and_capture_forocoches']]],
-  ['isperson_8',['IsPerson',['../classseek__and__capture__forocoches_1_1IsPerson.html',1,'seek_and_capture_forocoches']]]
+  ['findperson_10',['FindPerson',['../classseek__and__capture__forocoches_1_1FindPerson.html',1,'seek_and_capture_forocoches']]]
 ];

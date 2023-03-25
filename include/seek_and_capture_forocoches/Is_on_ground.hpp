@@ -23,6 +23,8 @@
 #include "kobuki_ros_interfaces/msg/wheel_drop_event.hpp"
 #include "rclcpp/rclcpp.hpp"
 
+#include "seek_and_capture_forocoches/DebugNode.hpp"
+
 namespace seek_and_capture_forocoches
 {
 class Is_on_ground : public BT::ConditionNode
@@ -42,6 +44,8 @@ public:
 private:
   rclcpp::Node::SharedPtr node_;
   rclcpp::Time last_reading_time_;
+  DebugNode::DebugPublisher debug_pub_;
+  DebugNode::DebugMessage debug_msg_;
   rclcpp::Subscription<kobuki_ros_interfaces::msg::WheelDropEvent>::SharedPtr wheel_drop_sub_;
   kobuki_ros_interfaces::msg::WheelDropEvent::UniquePtr last_wheel_dropped_;
 };

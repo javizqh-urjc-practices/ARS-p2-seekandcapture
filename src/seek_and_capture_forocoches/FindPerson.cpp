@@ -27,7 +27,8 @@ FindPerson::FindPerson(
 {
   config().blackboard->get("node", node_);
 
-  vel_pub_ = node_->create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 100);
+  vel_pub_ = node_->create_publisher<geometry_msgs::msg::Twist>("output_vel", 100);
+  debug_pub_ = node_->create_publisher<DebugNode::DebugMessage>(DebugNode::TOPIC_NAME, 10);
 }
 
 void
@@ -44,6 +45,8 @@ FindPerson::tick()
 
   geometry_msgs::msg::Twist vel_msgs;
   vel_msgs.angular.z = 0.15;
+  debug_msg_.data = DebugNode::ROTATING;
+  debug_pub_->publish(debug_msg_);
   vel_pub_->publish(vel_msgs);
 
   return BT::NodeStatus::RUNNING;

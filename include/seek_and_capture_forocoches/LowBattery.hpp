@@ -23,6 +23,7 @@
 #include "sensor_msgs/msg/battery_state.hpp"
 #include "rclcpp/rclcpp.hpp"
 
+#include "seek_and_capture_forocoches/DebugNode.hpp"
 
 namespace seek_and_capture_forocoches
 {
@@ -49,6 +50,8 @@ public:
 private:
   rclcpp::Node::SharedPtr node_;
   rclcpp::Time last_reading_time_;
+  DebugNode::DebugPublisher debug_pub_;
+  DebugNode::DebugMessage debug_msg_;
   rclcpp::Subscription<sensor_msgs::msg::BatteryState>::SharedPtr battery_sub_;
   sensor_msgs::msg::BatteryState::UniquePtr last_battery_state_;
 };

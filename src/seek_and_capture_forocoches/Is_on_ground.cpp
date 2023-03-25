@@ -34,7 +34,9 @@ Is_on_ground::Is_on_ground(
   config().blackboard->get("node", node_);
 
   wheel_drop_sub_ = node_->create_subscription<kobuki_ros_interfaces::msg::WheelDropEvent>(
-    "/scan", 100, std::bind(&Is_on_ground::wheel_drop_callback, this, _1));
+    "input_wheel_drop", 100, std::bind(&Is_on_ground::wheel_drop_callback, this, _1));
+
+  debug_pub_ = node_->create_publisher<DebugNode::DebugMessage>(DebugNode::TOPIC_NAME, 10);
 
   last_reading_time_ = node_->now();
 }
@@ -50,13 +52,17 @@ Is_on_ground::tick()
 {
   return BT::NodeStatus::SUCCESS;
   if (last_wheel_dropped_ == nullptr) {
-    return BT::NodeStatus::FAILURE;
+    debug_msg_.data = DebugNode::ERROR;
+    debug_pub_->publish(debug_msg_);
+    return BT::NodeStatus::RUNNING;
   }
 
   if (last_wheel_dropped_->state ==
     kobuki_ros_interfaces::msg::WheelDropEvent::DROPPED)
   {
-    return BT::NodeStatus::FAILURE;
+    debug_msg_.data = DebugNode::NOT_ON_GROUND;
+    debug_pub_->publish(debug_msg_);
+    return BT::NodeStatus::RUNNING;
   } else {
     return BT::NodeStatus::SUCCESS;
   }

@@ -40,11 +40,15 @@ set(dependencies
 include_directories(include ${ZMQ_INCLUDE_DIRS})
 
 add_library(seek_and_capture_navigation_bt_node SHARED src/seek_and_capture_forocoches/Navigation.cpp
-src/seek_and_capture_forocoches/PIDController.cpp)
-add_library(seek_and_capture_low_battery_bt_node SHARED src/seek_and_capture_forocoches/LowBattery.cpp)
-add_library(seek_and_capture_is_on_ground_bt_node SHARED src/seek_and_capture_forocoches/Is_on_ground.cpp)
-add_library(seek_and_capture_find_person_bt_node SHARED src/seek_and_capture_forocoches/FindPerson.cpp)
-add_library(seek_and_capture_is_person_bt_node SHARED src/seek_and_capture_forocoches/IsPerson.cpp)
+src/seek_and_capture_forocoches/PIDController.cpp src/seek_and_capture_forocoches/DebugNode.cpp)
+add_library(seek_and_capture_low_battery_bt_node SHARED src/seek_and_capture_forocoches/LowBattery.cpp
+src/seek_and_capture_forocoches/DebugNode.cpp)
+add_library(seek_and_capture_is_on_ground_bt_node SHARED src/seek_and_capture_forocoches/Is_on_ground.cpp
+src/seek_and_capture_forocoches/DebugNode.cpp)
+add_library(seek_and_capture_find_person_bt_node SHARED src/seek_and_capture_forocoches/FindPerson.cpp
+src/seek_and_capture_forocoches/DebugNode.cpp)
+add_library(seek_and_capture_is_person_bt_node SHARED src/seek_and_capture_forocoches/IsPerson.cpp
+src/seek_and_capture_forocoches/DebugNode.cpp)
 
 list(APPEND plugin_libs
   seek_and_capture_navigation_bt_node

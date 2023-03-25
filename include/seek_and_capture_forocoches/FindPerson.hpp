@@ -22,6 +22,8 @@
 
 #include "geometry_msgs/msg/twist.hpp"
 #include "rclcpp/rclcpp.hpp"
+
+#include "seek_and_capture_forocoches/DebugNode.hpp"
 namespace seek_and_capture_forocoches
 {
 
@@ -43,6 +45,8 @@ public:
 private:
   rclcpp::Node::SharedPtr node_;
   rclcpp::Time start_time_;
+  DebugNode::DebugPublisher debug_pub_;
+  DebugNode::DebugMessage debug_msg_;
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub_;
 };
 
