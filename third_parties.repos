@@ -1,7 +1,7 @@
 repositories:
   ThirdParty/perception_asr:
     type: git
-    url: https://github.com/fmrico/perception_asr 
+    url: https://github.com/SamthinkGit/perception_asr
     version: main
   ThirdParty/debug_forocoches:
     type: git
