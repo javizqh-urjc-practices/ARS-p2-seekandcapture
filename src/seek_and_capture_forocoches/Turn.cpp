@@ -48,7 +48,7 @@ Turn::tick()
 
   auto elapsed = node_->now() - start_time_;
 
-  if (elapsed < 3s) {
+  if (elapsed < 5s) {
     debug_msg_.data = DebugNode::PERSON_FOUND;
     debug_pub_->publish(debug_msg_);
     return BT::NodeStatus::RUNNING;
