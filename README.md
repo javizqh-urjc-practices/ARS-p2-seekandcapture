@@ -3,7 +3,7 @@
 ![distro](https://img.shields.io/badge/ROS2-Humble-blue)
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue)
 ![Language](https://img.shields.io/badge/Language-C%2B%2B-orange)
-![Build status](https://img.shields.io/badge/Build-Passing-brightgreen)
+![Build status](https://github.com/Docencia-fmrico/seekandcapture-forocoches/actions/workflows/lint.yml/badge.svg?branch=main)
 
 Práctica 1 – Arquitectura Software para Robots
 
