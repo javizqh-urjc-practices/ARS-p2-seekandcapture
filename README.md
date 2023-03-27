@@ -102,11 +102,13 @@ Para sobrellevar el problema de multiples objetivos en nuestro mapa, nos hemos a
 ```
 
 ## Comportamiento (Behavior Tree)
-El Behavior Tree implementado para dirigir el comportamiento del robot consta de cuatro nodos principales: KeepRunningUntilFailure, Sequence, ReactiveFallback y Action.
+El Behavior Tree implementado para dirigir el comportamiento del robot consta de cuatro nodos principales: IsPerson, FindPerson, Navigation y Turn.
 
-El nodo raíz del Behavior Tree es KeepRunningUntilFailure, que asegura que el árbol siga ejecutándose mientras no haya un fallo. Dentro de KeepRunningUntilFailure, tenemos un nodo Sequence, que ejecuta las tareas en secuencia, y un nodo ReactiveFallback, que se ejecuta si una condición específica no se cumple.
+El raíz del Behavior Tree da al nodo de control del tipo KeepRunningUntilFailure, que asegura que el árbol siga ejecutándose mientras no haya un fallo. Dentro de este tenemos un nodo de control Sequence, que ejecuta las tareas en secuencia, y un nodo de control ReactiveFallback, que se ejecuta hasta que se detecta a una persona.
 
-La condición que se verifica en el nodo ReactiveFallback es si el robot detecta a una persona. Si no hay ninguna persona detectada, el nodo FindPerson se ejecuta para buscar a alguien. Una vez que se detecta a una persona, el nodo Navigate se ejecuta para guiar al robot hacia la persona utilizando el frame de la persona detectada. El nodo Turn se ejecuta cuando el robot se acerca a la persona y necesita detenerse y hacer una señal.
+Si no hay ninguna persona detectada, el nodo FindPerson se ejecuta para rotar el robot y así encontrar a alguna persona. Una vez que se detecta a una persona, el nodo IsPerson guarda su frame para que este sea usado más adelante.
+
+Fuera ya del ReactiveFallback, el nodo Navigate se ejecuta para guiar al robot hacia la persona utilizando el frame de la persona detectada guardada anteriormente. Cuando se completa el movimento, se da por encontrada a la persona y se procede a girar para así prepararse para el nuevo ciclo. Esta última parte es necesitada por un bug en la detección de Darknet.
 
 En resumen, este Behavior Tree implementado para el robot cumple con el objetivo de encontrar a una persona, acercarse a ella y hacer una señal, y luego buscar a otra persona para repetir el proceso.
 
