@@ -1,6 +1,9 @@
 # ASR-1-SeekAndCapture
 ![distro](https://img.shields.io/badge/Ubuntu%2022-Jammy%20Jellyfish-green)
 ![distro](https://img.shields.io/badge/ROS2-Humble-blue)
+![License](https://img.shields.io/badge/License-Apache%202.0-blue)
+![Language](https://img.shields.io/badge/Language-C%2B%2B-orange)
+![Build status](https://img.shields.io/badge/Build-Passing-brightgreen)
 
 Práctica 1 – Arquitectura Software para Robots
 
@@ -30,11 +33,6 @@ Puntuación:
 <p align="center">
   <img src="https://user-images.githubusercontent.com/92941012/227970105-c6a33f31-2ce9-412d-895c-99a95766586b.png" width="600"/>
 </p>
-
-![ROS2 version](https://img.shields.io/badge/ROS2-Humble-blue)
-![License](https://img.shields.io/badge/License-Apache%202.0-blue)
-![Language](https://img.shields.io/badge/Language-C%2B%2B-orange)
-![Build status](https://img.shields.io/badge/Build-Passing-brightgreen)
 
 ¡Bienvenidos al repositorio de SeekAndCapture-Forocoches! Somos un equipo altamente cualificado y dedicado que ha trabajado arduamente en este proyecto. Este es un modelo de sistema desarrollado en ROS-2 que permite a un robot seguir a varias personas utilizando la cámara Astra del Kobuki y algoritmos basados en transformaciones mediante la librería darknet-ros.
 
