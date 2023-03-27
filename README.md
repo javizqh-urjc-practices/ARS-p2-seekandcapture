@@ -26,43 +26,95 @@ Puntuación:
 
 ***
 
-# seek-and-capture-forocoches V.1.0.0
+# SeekAndCapture-Forocoches V.1.0.0
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/92941012/227970105-c6a33f31-2ce9-412d-895c-99a95766586b.png" width="600"/>
+</p>
+
 ![ROS2 version](https://img.shields.io/badge/ROS2-Humble-blue)
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue)
 ![Language](https://img.shields.io/badge/Language-C%2B%2B-orange)
 ![Build status](https://img.shields.io/badge/Build-Passing-brightgreen)
 
-*LOGO SEEK-AND-CAPTURE FOROCOCHES*
+¡Bienvenidos al repositorio de SeekAndCapture-Forocoches! Somos un equipo altamente cualificado y dedicado que ha trabajado arduamente en este proyecto. Este es un modelo de sistema desarrollado en ROS-2 que permite a un robot seguir a varias personas utilizando la cámara Astra del Kobuki y algoritmos basados en transformaciones mediante la librería darknet-ros.
 
-¡Bienvenidos al repositorio de seekandcapture-forocoches! Este en un modelo de sistema desarrollado en ROS-2, que dotan al robot de la capacidad de seguir a varias personas utilizando la cámara Astra del Kobuki y algoritmos basados en transformaciones mediante la librería darknet-ros que se nos ha proporcionado. Este proyecto es el resultado de la unión de las dos partes que principalmente componen nuestro subsistema, para la cual una mitad del grupo se ha ocupado de la parte perceptiva, mientras que la otra mitad se ha encargado de la parte de movimiento.
+Este proyecto es el resultado de la colaboración entre dos equipos que enfocados en la parte perceptiva y dinámica de los comportamientos del robot, respectivamente. Hemos mejorado y perfeccionado ambas partes para que el robot pueda seguir a varias personas y satisfacer los requisitos de esta práctica.
 
-En este repositorio se encuentran todos los componentes necesarios para utilizar este modelo de sistema en tu propio robot. Además, hemos hecho todo lo posible para facilitar la instalación y uso del paquete , lo que significa que puedes poner en marcha tu robot y que comience a seguir a todas las personas que vaya detectando.
-
-Este proyecto ha sido desarrollado por un equipo altamente calificado y dedicado, que ha trabajado duro para hacer que, partiendo de un funcionamiento básico por separado de las partes de percepción y movimiento, respectivamente, empezando por seguir a una sola persona, se hayan mejorado y perfeccionado ambas partes para que el robot pueda seguir a varias personas y se ajuste todo lo posible con los requisitos pedidos en esta práctica.
-
-Como introducción a nuestro modelo de sistema seek-and-capture, se muestra el funcionamiento de esta conjunción de percepción y movimiento. En este vídeo, se puede ver cómo el robot se va moviendo por un entorno mientras va siguiendo a una persona:
-
-*VÍDEO DEMOSTRACIÓN (GRABAR LUNES 27/03 POR LOS PASILLOS)*
-
-Como se observa, nuestro robot va moviéndose por el entorno de manera eficiente y segura gracias a la combinación de capacidades de percepción y movimiento integradas en el modelo del sistema seek-and-capture que permiten al robot seguir a una persona en tiempo real.
-
-*CAPACIDADES ADICIONALES*
-
-*IMÁGENES DE APOYO (GRÄFICOS, GIF DE LA TRANSFORMADA EN RVIZ, ETC …)*
+<div align="center">
+  <video src="https://user-images.githubusercontent.com/92941012/227981005-558a5dc9-346e-4f47-b4e3-389057dcda6b.mp4" width="200" poster="https://user-images.githubusercontent.com/92941012/227982978-544fed1a-1262-4535-9262-3fefc7ea7b3d.png" controls></video>
+</div>
 
 ## Instalación
+Este repositorio contiene todos los componentes necesarios para utilizar este modelo de sistema en tu propio robot. Hemos hecho todo lo posible para facilitar la instalación y uso del paquete. Sigue estos pasos para instalarlo:
 
-*GIFS DE TERMINAL Y BREVE DESCRIPCIÓN DE CADA UNO DE LOS PASOS A SEGUIR*
+1. Clona el repositorio principal:
+```sh
+git clone https://github.com/tu_usuario/tu_repositorio.git
+cd seekandcapture-forocoches
+```
+2. Ejecuta el instalador automático
+```sh
+./setup.sh
+```
 
-## Topics usados en este modelo
+Opcionalmente tambien puedes instalar manualmente el repositorio si ya posees una o varias dependencias dentro de tu equipo. Para ello puedes utilizar **vcs import** con el fichero __third_parties.repos__ y seleccionar manualmente las instalaciones necesarias. Recuerda, es importante descargar de forma recursiva la dependencia de darknet, y una vez descargados, deberas instalar dichos paquetes en la terminal que estes utilizando. Puedes encontrar mas información en:
+https://docs.ros.org/en/foxy/Tutorials/Beginner-Client-Libraries/Colcon-Tutorial.html
 
-*BREVE DESCRIPCIÓN Y DIAGRAMA DE LOS TOPICS*
+Una vez instalado el repositorio, podrás poner en marcha tu robot y permitir que este siga a todas las personas que detecte. Asegúrate de que el robot tenga la cámara Astra y que esté configurado correctamente para usarla.
 
-## Behavior Tree implementado para este modelo
+## Modo de uso
+Para lanzar el paquete SeekAndCapture-Forocoches en ROS2, es necesario utilizar el launcher seek_and_capture_full.launch.py. Este launcher se encargará de lanzar todos los paquetes necesarios para el funcionamiento del sistema, incluyendo los paquetes de percepción y comportamiento.
 
-*BREVE DESCRIPCIÓN E IMAGEN DEL BEHAVIOR TREE DE GROOT ESPECIFICANDO SU COMPORTAMIENTO*
+Además, es importante asegurarse de conectar los correspondientes paquetes de sincronización con el robot Kobuki para que el sistema pueda recibir y enviar datos correctamente.
 
-## Problemas
+```sh
+ros2 launch seekandcapture-forocoches seek_and_capture_full.launch.py
+```
+
+## Comportamiento (Perception)
+El nodo IsPerson es el nodo que se encarga de detectar personas en un entorno a través de una cámara y publicar sus posiciones en el marco de referencia del robot. Este nodo recibe mensajes de detección de personas en 3D de la camara preprocesado por el paquete perception_asr y utiliza la información de la transformación de la cámara con respecto al robot para calcular la posición de la persona en el marco de referencia del robot.
+
+El nodo IsPerson hereda de la clase BT::ActionNodeBase y contiene una serie de métodos para el procesamiento de datos. El método de tick() es el que se ejecuta cuando el nodo es activado y su función es determinar si hay personas detectadas en la última detección recibida y publicar la posición de la persona detectada en el marco de referencia del robot. Si no se ha recibido una detección de persona reciente, devuelve un estado de falla.
+
+El método de tf_already_exists_in_position() se encarga de comprobar si una persona detectada en una posición determinada ya ha sido publicada anteriormente. Esto se hace verificando si la distancia entre la nueva posición de la persona y la posición de todas las personas ya detectadas es inferior a un cierto umbral. Si la distancia es menor que el umbral, se considera que la persona ya ha sido publicada y la detección actual se omite. Este método se utiliza para evitar la publicación de la misma persona varias veces.
+
+Para sobrellevar el problema de multiples objetivos en nuestro mapa, nos hemos aprovechado de una generación en tiempo de ejecución de nombres de frames, que se iran generando a medida que el robot vaya detectando nuevos destinos. Estos frames tendran una determinada sensibilidad de generación es decir, deberan tener una minima distancia para poder detectarse como distintos frames, lo que omite detecciones erroneas por parte de darknet
+```c++
+  // Publication of detected target
+  
+  // --- Calculation ---
+  tf2::Transform odom2person = odom2robot * robot2person;
+  geometry_msgs::msg::TransformStamped odom2person_msg;
+  odom2person_msg.transform = tf2::toMsg(odom2person);
+
+  // --- Generating new frame (based in number of detections) ---
+  odom2person_msg.header = detection.header;
+  odom2person_msg.header.frame_id = "odom";
+  odom2person_msg.child_frame_id = "person_detected" + std::to_string(person_detected);
+
+  // --- Publishing frame ---
+  config().blackboard->set(
+    "person_frame",
+    "person_detected" + std::to_string(person_detected));
+  person_detected++;
+  tf_broadcaster_->sendTransform(odom2person_msg);
+  debug_msg_.data = DebugNode::PERSON_DETECTED;
+  debug_pub_->publish(debug_msg_);
+  return BT::NodeStatus::SUCCESS;
+```
+
+## Comportamiento (Behavior Tree)
+El Behavior Tree implementado para dirigir el comportamiento del robot consta de cuatro nodos principales: KeepRunningUntilFailure, Sequence, ReactiveFallback y Action.
+
+El nodo raíz del Behavior Tree es KeepRunningUntilFailure, que asegura que el árbol siga ejecutándose mientras no haya un fallo. Dentro de KeepRunningUntilFailure, tenemos un nodo Sequence, que ejecuta las tareas en secuencia, y un nodo ReactiveFallback, que se ejecuta si una condición específica no se cumple.
+
+La condición que se verifica en el nodo ReactiveFallback es si el robot detecta a una persona. Si no hay ninguna persona detectada, el nodo FindPerson se ejecuta para buscar a alguien. Una vez que se detecta a una persona, el nodo Navigate se ejecuta para guiar al robot hacia la persona utilizando el frame de la persona detectada. El nodo Turn se ejecuta cuando el robot se acerca a la persona y necesita detenerse y hacer una señal.
+
+En resumen, este Behavior Tree implementado para el robot cumple con el objetivo de encontrar a una persona, acercarse a ella y hacer una señal, y luego buscar a otra persona para repetir el proceso.
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/92941012/228001946-e27ad7a8-4deb-4300-b8d7-8f8afb30368e.gif" width="600"/>
+</p>
 
 ## Autores
 * Javier Izquierdo
@@ -70,7 +122,6 @@ Como se observa, nuestro robot va moviéndose por el entorno de manera eficiente
 * Luis Moreno
 * Sebastian Mayorquín
 
+## Contribuciones
+Las contribuciones son bienvenidas. Si deseas contribuir a este proyecto, por favor, crea un pull request. Asegúrate de seguir las directrices de contribución antes de hacerlo.
 __By Forocoches__
-
-
-
