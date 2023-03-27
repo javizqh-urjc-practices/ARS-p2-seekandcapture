@@ -44,7 +44,7 @@ FindPerson::tick()
   }
 
   geometry_msgs::msg::Twist vel_msgs;
-  vel_msgs.angular.z = 0.15;
+  vel_msgs.angular.z = 0.25;
   debug_msg_.data = DebugNode::ROTATING;
   debug_pub_->publish(debug_msg_);
   vel_pub_->publish(vel_msgs);

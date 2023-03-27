@@ -35,8 +35,6 @@ int main(int argc, char * argv[])
   BT::SharedLibrary loader;
 
   factory.registerFromPlugin(loader.getOSName("seek_and_capture_navigation_bt_node"));
-  factory.registerFromPlugin(loader.getOSName("seek_and_capture_low_battery_bt_node"));
-  factory.registerFromPlugin(loader.getOSName("seek_and_capture_is_on_ground_bt_node"));
   factory.registerFromPlugin(loader.getOSName("seek_and_capture_find_person_bt_node"));
   factory.registerFromPlugin(loader.getOSName("seek_and_capture_is_person_bt_node"));
   factory.registerFromPlugin(loader.getOSName("seek_and_capture_turn_bt_node"));

@@ -96,6 +96,10 @@ IsPerson::tick()
 
   for (auto detection : last_detection_->detections) {
     if (detection.results[0].hypothesis.class_id.compare("person") == 0) {
+      // BUG: filtering bad depth detection results
+      if (detection.bbox.center.position.z < 0.5 || detection.bbox.center.position.z > 5.5) {
+        continue;
+      }
       // Tf from robot to person
       tf2::Transform robot2person;
       robot2person.setOrigin(
