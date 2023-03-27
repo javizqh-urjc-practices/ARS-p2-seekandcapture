@@ -73,7 +73,7 @@ void DebugNode::control_cycle()
     case PERSON_FOUND:
       set_led1_value(LED_OFF);
       set_led2_value(LED_GREEN, FLASHING);
-      set_sound(SOUND_CLEANINGSTART);
+      set_sound(SOUND_BUTTON);
       RCLCPP_DEBUG(get_logger(), "PERSON_FOUND");
       break;
     case OK:

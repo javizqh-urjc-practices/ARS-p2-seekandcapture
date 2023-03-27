@@ -28,7 +28,7 @@ def generate_launch_description():
         package='perception_asr',
         executable='darknet_detection',
         output='screen',
-        parameters=[{'use_sim_time': True}],
+        parameters=[{'use_sim_time': False}],
         remappings=[
             ('input_bbxs_detection', '/darknet_ros/bounding_boxes'),
             ('output_detection_2d', '/detection_2d_array')
@@ -40,7 +40,7 @@ def generate_launch_description():
         package='perception_asr',
         executable='detection_2d_to_3d_depth',
         output='screen',
-        parameters=[{'use_sim_time': True}],
+        parameters=[{'use_sim_time': False}],
         remappings=[
             ('input_depth', '/camera/depth/image_raw'),
             ('camera_info', '/camera/depth/camera_info'),
@@ -52,7 +52,7 @@ def generate_launch_description():
         package='debug_forocoches',
         executable='debug_interface',
         output='screen',
-        parameters=[{'use_sim_time': True}],
+        parameters=[{'use_sim_time': False}],
         arguments=['--ros-args', '--log-level', 'debug'],
         remappings=[
             ('output_led_1', '/commands/led1'),
@@ -66,7 +66,7 @@ def generate_launch_description():
         package='seek_and_capture_forocoches',
         executable='sac_forocoches',
         output='screen',
-        parameters=[{'use_sim_time': True}],
+        parameters=[{'use_sim_time': False}],
         arguments=['--ros-args', '--log-level', 'info'],
         remappings=[
             ('output_vel', '/cmd_vel'),
